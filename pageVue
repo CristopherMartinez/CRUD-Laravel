@@ -1,0 +1,102 @@
+<template>
+  <div id="app">
+    <form @submit.prevent="saveInvoice()" v-show="showForm">
+      <label for="factura">Factura</label>
+      <input type="text" id="factura" v-model="invoice.factura" />
+      <br />
+      <label for="number1">Número 1:</label>
+      <input
+        type="number"
+        id="number1"
+        v-model.number="invoice.productos.precio"
+      />
+      <br />
+      <label for="number2">Número 2:</label>
+      <input
+        type="number"
+        id="number2"
+        v-model.number="invoice.productos.cantidad"
+      />
+      <br />
+      <label for="multiplicacion">Total:</label>
+      <input
+        type="number"
+        id="multiplicacion"
+        :value="multiplicacion"
+        readonly
+      />
+      <br />
+      <label for="">Selecciona un proveedor</label>
+      <select id="proveedor" v-model="invoice.proveedor">
+        <option value="" disabled>Selecciona un proveedor</option>
+        <option
+          v-for="proveedor in providers"
+          :key="proveedor.nombre"
+          :value="proveedor.nombre"
+        >
+          {{ proveedor.nombre }}
+        </option>
+      </select>
+      <br />
+      <button type="submit">Guardar factura</button>
+    </form>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      showForm: true,
+      providers: [
+        { id: 1, nombre: "CVA" },
+        { id: 2, nombre: "Syscom" },
+        { id: 3, nombre: "TVC" },
+      ],
+      invoice: {
+        factura: "",
+        proveedor: "",
+        productos: [
+          // {
+          //   id:0
+          //   precio: 0,
+          //   cantidad: 0,
+          //   total: 0,
+          // },
+        ],
+      },
+    };
+  },
+  computed: {
+    multiplicacion() {
+      return this.invoice.productos.precio * this.invoice.productos.cantidad;
+    },
+  },
+  methods: {
+    saveInvoice() {
+      var product = {
+        id: this.invoice.productos.length + 1,
+        precio: this.invoice.productos.precio,
+        cantidad: this.invoice.productos.cantidad,
+        total: this.invoice.productos.precio * this.invoice.productos.cantidad,
+      };
+
+      this.invoice.productos.push(product);
+
+      console.log(this.invoice);
+    },
+  },
+};
+</script>
+
+<style>
+/* Estilos opcionales */
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>
+
